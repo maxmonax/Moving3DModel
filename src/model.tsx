@@ -145,6 +145,7 @@ export async function MoveCamera(
       y: cam.position.y,
       z: cam.position.z,
       duration: config.animDuration / 1000,
+      ease: "power1.out",
       /* onUpdate: () => {
         camera.lookAt(point.x, point.y, point.z);
       },
@@ -160,6 +161,7 @@ export async function MoveCamera(
       y: point.y,
       z: point.z,
       duration: config.animDuration / 1000,
+      ease: "power1.out",
       onUpdate: () => {
         camera.lookAt(point.x, point.y, point.z);
       },
@@ -212,7 +214,6 @@ const Model3D = () => {
   const [menuHeading, SetHeading] = useState("");
   const [rightText, RTSetup] = useState(config.BorderContent[0]);
 
-  // Первичная загрузка модели
   const ModelSetup = (gltf: any) => {
     const model = gltf.scene;
     const container = document.querySelector(".render--zone");
@@ -233,14 +234,12 @@ const Model3D = () => {
             size: 0.2,
           }); */
 
-          // Создаем объект точек
           /* let points = new THREE.Mesh(child.geometry, child.material);
           points.translateZ(counter * 50)
           points.translateY(counter * 50)
           points.translateX(counter * 50)
           points.name = child.name + "_mesh" */
 
-          // Добавляем объект точек в сцену
           // scene.add(points);
           interactionManager.add(child);
           child.addEventListener("click", (event: any) => {
