@@ -15,10 +15,6 @@ import { LinearMenu } from "menu/linearMenu";
 
 let isCamMoving = false;
 
-/* setTimeout(() => {
-  isCamMoving = false;
-}, 1000); */
-
 const loader = new GLTFLoader();
 const scene = new THREE.Scene();
 const defaultMaterials = new Map<string, THREE.Material>();
@@ -29,6 +25,8 @@ const camera = new THREE.PerspectiveCamera(
   1,
   config.baseCamDistance
 );
+
+let cameraTarget = new THREE.Vector3();
 
 const renderer = new THREE.WebGLRenderer({
   alpha: true,
@@ -75,8 +73,8 @@ renderer.shadowMap.enabled = true;
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-controls.enableZoom = false; 
-controls.enableRotate = false; 
+controls.enableZoom = false;
+controls.enableRotate = false;
 controls.enablePan = false;
 
 controls.listenToKeyEvents(window);
@@ -109,83 +107,49 @@ requestAnimationFrame(updateFPS);
   console.log(camera.focus);
 }); */
 
-export async function MoveCamera(
-  cam: camObject,
-  animated = true,
-  point = config.defaultPoint,
-  useEdge = false
-) {
-  controls.target.set(point.x, point.y, point.z);
+function initCameraPosition(aDefaultConfig: camObject) {
+  let c = aDefaultConfig;
+  camera?.position.set(c.position.x, c.position.y, c.position.z);
+  // camera?.rotation.set(c.rotation._x, c.rotation._y, c.rotation._z);
+  cameraTarget?.copy(c.target as any);
+  camera?.lookAt(cameraTarget);
+}
 
-  if (animated) {
-    if (isCamMoving) {
-      return;
-    }
-    isCamMoving = true;
-    let currentRotation = {
-      _x: camera.rotation.x,
-      _y: camera.rotation.y,
-      _z: camera.rotation.z,
-    };
-    currentRotation = {
-      _x: camera.rotation.x,
-      _y: camera.rotation.y,
-      _z: camera.rotation.z,
-    };
+export async function MoveCamera(aConfig: camObject) {
+  // controls.target.set(point.x, point.y, point.z);
+  // debugger;
 
-    const cameraDirection = new THREE.Vector3();
-    camera.getWorldDirection(cameraDirection);
-    const target = new THREE.Vector3();
-    target.copy(camera.position).add(cameraDirection);
+  const DUR = config.animDuration / 1000;
 
-    let activeTarget = target
+  if (isCamMoving) return;
+  isCamMoving = true;
 
-    gsap.to(camera.position, {
-      x: cam.position.x,
-      y: cam.position.y,
-      z: cam.position.z,
-      duration: config.animDuration / 1000,
-      ease: "power1.out",
-      /* onUpdate: () => {
-        camera.lookAt(point.x, point.y, point.z);
-      },
-      onComplete: () => {
-        // camera.rotation.set(cam.rotation._x, cam.rotation._y, cam.rotation._z);
-        console.log(camera.rotation);
-        console.log(camera.rotation);
-      }, */
-    });
+  // move camera
+  gsap.to(camera.position, {
+    x: aConfig.position.x,
+    y: aConfig.position.y,
+    z: aConfig.position.z,
+    duration: DUR,
+    ease: "power1.out"
+  });
 
-    gsap.to(activeTarget, {
-      x: point.x,
-      y: point.y,
-      z: point.z,
-      duration: config.animDuration / 1000,
-      ease: "power1.out",
-      onUpdate: () => {
-        camera.lookAt(point.x, point.y, point.z);
-      },
-    })
-
-    /* gsap.to(camera.rotation, {
-      x: cam.rotation._x,
-      y: cam.rotation._y,
-      z: cam.rotation._z,
-      duration: config.animDuration / 1000,
-      onComplete: () => {
-        const cameraDirection = new THREE.Vector3();
-        camera.getWorldDirection(cameraDirection);
-        const target = new THREE.Vector3();
-        target.copy(camera.position).add(cameraDirection);
-        console.log("target : ");
-        console.log(target);
-      }
-    });*/
-
-  } else {
-    camera.position.set(cam.position.x, cam.position.y, cam.position.z); // 0,y,0 - для вида сверху
-    camera.rotation.set(cam.rotation._x, cam.rotation._y, cam.rotation._z);
+  // move camera target
+  if (!aConfig.target) {
+    console.warn(`!aConfig.target`, aConfig);
+    return;
   }
+  gsap.to(cameraTarget, {
+    x: aConfig.target.x,
+    y: aConfig.target.y,
+    z: aConfig.target.z,
+    duration: DUR,
+    ease: "power1.out",
+    onUpdate: () => {
+      camera.lookAt(cameraTarget);
+    },
+  })
+
+  // TODO: так нельзя, с этим надо что-то делать
   setTimeout(() => {
     // controls.target.set(point.x, point.y, point.z); //Точка, вокруг которой идёт вращение мышкой
     isCamMoving = false;
@@ -283,8 +247,8 @@ const Model3D = () => {
     if (clicker) {
       clicker.addEventListener('click', (event) => {
         const index = Number(clicker.innerHTML)
-        if (index >= 0 && index < config.CamVars.length) {
-          MoveCamera(config.CamVars[index], true, config.objectPoints[index])
+        if (index >= 0 && index < config.CAMERA_POS.length) {
+          MoveCamera(config.CAMERA_POS[index])
         }
       })
     }
@@ -308,7 +272,8 @@ const Model3D = () => {
 
   useEffect(() => {
     loader.load(config.url, ModelSetup);
-    MoveCamera(config.defaultCam, false);
+    // MoveCamera(config.defaultCam, false);
+    initCameraPosition(config.defaultCam);
   }, []);
 
   return (

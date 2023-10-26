@@ -4,13 +4,13 @@ export const url: string = "model/jupiter.glb";
 
 export const inactiveNameSelector: string = "inactive";
 
-export const wireframeColor = 0xe5e5e5; 
-export const colorBlack = 0x000000; 
-export const baseLightIntense = 0xc6c6c6; 
-export const lightStrength = 1.5; 
+export const wireframeColor = 0xe5e5e5;
+export const colorBlack = 0x000000;
+export const baseLightIntense = 0xc6c6c6;
+export const lightStrength = 1.5;
 export const baseCamDistance = 25000;
 export const animDuration = 1000;
-export const animFrames = 20; 
+export const animFrames = 20;
 export const animFps = 120;
 
 export const defaultCam: camObject = {
@@ -24,6 +24,11 @@ export const defaultCam: camObject = {
     _y: 0.2808091813843981,
     _z: 0.08221234672717474,
   },
+  target: {
+    x: 2.2,
+    y: 0.0,
+    z: 0.1
+  }
 };
 
 export const finalCam: camObject = {
@@ -39,7 +44,7 @@ export const finalCam: camObject = {
   },
 };
 
-export const CamVars: camObject[] = [
+export const CAMERA_POS: camObject[] = [
   {
     position: {
       x: 2.4819976023870747,
@@ -50,6 +55,11 @@ export const CamVars: camObject[] = [
       _x: -0.2889989838283902,
       _y: 0.2808091813843981,
       _z: 0.08221234672717474,
+    },
+    target: {
+      x: 2.2048649481058575,
+      y: 0.04458184887866806,
+      z: 0.1859484844327317,
     },
   },
   {
@@ -63,6 +73,11 @@ export const CamVars: camObject[] = [
       _y: -0.17497198744653378,
       _z: 0.01978711392952373,
     },
+    target: {
+      x: 2.84475556518226,
+      y: 0.06425178572525536,
+      z: -1.826653411890255,
+    },
   },
   {
     position: {
@@ -75,6 +90,11 @@ export const CamVars: camObject[] = [
       _y: 1.4971444366805977,
       _z: 3.0951884719854355,
     },
+    target: {
+      x: 2.768306106718132,
+      y: 0.039748315646996234,
+      z: -4.06028788754364,
+    },
   },
   {
     position: {
@@ -86,6 +106,11 @@ export const CamVars: camObject[] = [
       _x: -3.0738846549292003,
       _y: 0.26827866943840334,
       _z: 3.1236196130860123,
+    },
+    target: {
+      x: 0.9486886072129939,
+      y: -0.08164377982993173,
+      z: -6.374698811203773,
     },
   },
 ];
@@ -116,29 +141,6 @@ export const defaultPoint: pointVector = {
   y: 0,
   z: 0,
 };
-
-export const objectPoints: pointVector[] = [
-  {
-    x: 2.2048649481058575,
-    y: 0.04458184887866806,
-    z: 0.1859484844327317,
-  },
-  {
-    x: 2.84475556518226,
-    y: 0.06425178572525536,
-    z: -1.826653411890255,
-  },
-  {
-    x: 2.768306106718132,
-    y: 0.039748315646996234,
-    z: -4.06028788754364,
-  },
-  {
-    x: 0.9486886072129939,
-    y: -0.08164377982993173,
-    z: -6.374698811203773,
-  },
-]
 
 export const SetAmbientLight = true;
 
