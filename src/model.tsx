@@ -147,15 +147,11 @@ export async function MoveCamera(aConfig: camObject) {
     onUpdate: () => {
       camera.lookAt(cameraTarget);
     },
+    onComplete: () => {
+      isCamMoving = false;
+    }
   })
 
-  // TODO: так нельзя, с этим надо что-то делать
-  setTimeout(() => {
-    // controls.target.set(point.x, point.y, point.z); //Точка, вокруг которой идёт вращение мышкой
-    isCamMoving = false;
-  }, config.animDuration * 1 + 11);
-
-  // controls.update()
 }
 
 export function ShowElements() {
